@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SmartEdu — AI-Powered Learning Support Detection System</title>
+  <meta name="description" content="Detecting hidden academic support signals through non-deficit learning behavior analysis, confidence tracking, and explainable teacher interventions.">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/mobile-shell.css">
+  <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+
+  <!-- Top Evaluation Switcher Bar -->
+  <header class="view-mode-bar">
+    <span>📱 Mobile-First Android Viewport</span>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <a href="/presentation.html" class="mode-toggle-btn" style="text-decoration:none; background:#F59E0B; color:#fff;" target="_blank">📊 Pitch Deck (Infinity X)</a>
+      <button id="toggle-view-mode-btn" class="mode-toggle-btn" aria-label="Toggle between Phone Frame and Responsive View">Responsive View</button>
+    </div>
+  </header>
+
+  <!-- Mobile Phone Device Frame -->
+  <main class="device-container" id="phone-shell">
+    
+    <!-- Phone Notch Bezel -->
+    <div class="phone-notch">
+      <div class="notch-speaker"></div>
+    </div>
+
+    <!-- Phone Status Bar -->
+    <div class="phone-status-bar">
+      <span class="status-time" id="phone-clock">12:30</span>
+      <div class="status-icons">
+        <span>5G</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg width="18" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="20" y1="10" x2="20" y2="14" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+    </div>
+
+    <!-- Global App Header -->
+    <header class="app-header" id="app-header-bar" style="display:none;">
+      <div class="app-brand">
+        <div class="brand-icon">SE</div>
+        <h1 class="brand-title" style="font-size:16px; margin:0;">SmartEdu</h1>
+        <span class="brand-badge">AI Support</span>
+      </div>
+      <div class="header-user-info">
+        <span id="header-user-tag" class="user-role-tag">Role</span>
+        <button class="logout-btn" onclick="App.logout()" title="Logout" aria-label="Logout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- App Content Viewport (Scrollable) -->
+    <div class="app-content-viewport">
+      
+      <!-- 1. AUTHENTICATION VIEW -->
+      <section id="auth-view" class="screen-padding" style="display:flex; justify-content:center; padding-top:24px;">
+        <div style="text-align:center; margin-bottom:12px;">
+          <div class="brand-icon" style="width:52px; height:52px; font-size:24px; margin:0 auto 12px auto;">SE</div>
+          <h2 style="font-size:22px; font-weight:900; color:var(--primary); letter-spacing:-0.5px;">SmartEdu</h2>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+            AI-Powered Hidden Academic Support Detection System
+          </p>
+        </div>
+
+        <!-- Fast Evaluator Demo Login Box -->
+        <div class="demo-accounts-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; font-weight:700; color:var(--primary);">⚡ 1-Click Evaluator Fast Login</span>
+            <span class="badge" style="background:#E0F2FE; color:#0369A1; font-size:9px;">HACKATHON DEMO</span>
+          </div>
+          <div class="demo-btn-row">
+            <button type="button" class="demo-role-btn" onclick="App.fastDemoLogin('student')">
+              👤 Student<br><span style="font-size:9px; color:var(--text-muted);">Alex Morgan</span>
+            </button>
+            <button type="button" class="demo-role-btn" onclick="App.fastDemoLogin('teacher')">
+              🧑‍🏫 Teacher<br><span style="font-size:9px; color:var(--text-muted);">Dr. S. Jenkins</span>
+            </button>
+            <button type="button" class="demo-role-btn" onclick="App.fastDemoLogin('admin')">
+              🛡️ Admin<br><span style="font-size:9px; color:var(--text-muted);">System Admin</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Card Form -->
+        <div class="card" style="margin-top:8px;">
+          <form id="login-form">
+            <div id="login-error-box" style="display:none; background:#FEE2E2; border:1px solid #FECACA; color:#991B1B; font-size:12px; padding:10px; border-radius:8px; margin-bottom:12px;"></div>
+            
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email Address</label>
+              <input type="email" id="login-email" class="form-input" placeholder="e.g. alex.morgan@smartedu.edu" value="alex.morgan@smartedu.edu" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-input" value="Password123!" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
+              Sign In to SmartEdu
+            </button>
+          </form>
+        </div>
+
+        <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px; line-height:1.4;">
+          Cycle: Learning → Pattern Analysis → Support Signal → Evidence Review → Intervention → Measured Improvement
+        </div>
+      </section>
+
+      <!-- 2. STUDENT MAIN VIEW -->
+      <section id="student-view" style="display:none; flex-direction:column;">
+        <div id="student-dashboard-content" class="screen-padding"></div>
+        <div id="student-quizzes-content" class="screen-padding" style="display:none;"></div>
+        <div id="student-interventions-content" class="screen-padding" style="display:none;"></div>
+      </section>
+
+      <!-- 3. STUDENT INTERACTIVE QUIZ RUNNER VIEW -->
+      <section id="student-quiz-runner-view" style="display:none; flex-direction:column; width:100%;">
+        <div id="quiz-runner-container" style="display:flex; flex-direction:column; width:100%;"></div>
+      </section>
+
+      <!-- 4. TEACHER MAIN VIEW -->
+      <section id="teacher-view" style="display:none; flex-direction:column;">
+        <div id="teacher-dashboard-content" class="screen-padding"></div>
+        <div id="teacher-signals-content" class="screen-padding" style="display:none;"></div>
+        <div id="teacher-quizzes-content" class="screen-padding" style="display:none;"></div>
+        <div id="teacher-interventions-content" class="screen-padding" style="display:none;"></div>
+      </section>
+
+      <!-- 5. ADMIN MAIN VIEW -->
+      <section id="admin-view" style="display:none; flex-direction:column;">
+        <nav class="sub-tabs-bar" aria-label="Admin Navigation Tabs">
+          <button id="subtab-admin-dashboard" class="sub-tab-btn active" onclick="App.switchAdminTab('admin-dashboard')">Overview</button>
+          <button id="subtab-admin-students" class="sub-tab-btn" onclick="App.switchAdminTab('admin-students')">Students</button>
+          <button id="subtab-admin-teachers" class="sub-tab-btn" onclick="App.switchAdminTab('admin-teachers')">Teachers</button>
+        </nav>
+        <div id="admin-dashboard-content" class="screen-padding"></div>
+        <div id="admin-students-content" class="screen-padding" style="display:none;"></div>
+        <div id="admin-teachers-content" class="screen-padding" style="display:none;"></div>
+      </section>
+
+    </div>
+
+    <!-- STUDENT BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav-bar" id="student-bottom-nav" style="display:none;" aria-label="Student Navigation">
+      <button class="nav-item active" id="nav-student-dashboard" onclick="App.switchStudentTab('student-dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" id="nav-student-quizzes" onclick="App.switchStudentTab('student-quizzes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Quizzes</span>
+      </button>
+      <button class="nav-item" id="nav-student-interventions" onclick="App.switchStudentTab('student-interventions')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Support</span>
+      </button>
+    </nav>
+
+    <!-- TEACHER BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav-bar" id="teacher-bottom-nav" style="display:none;" aria-label="Teacher Navigation">
+      <button class="nav-item active" id="nav-teacher-dashboard" onclick="App.switchTeacherTab('teacher-dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Overview</span>
+      </button>
+      <button class="nav-item" id="nav-teacher-signals" onclick="App.switchTeacherTab('teacher-signals')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Signals</span>
+      </button>
+      <button class="nav-item" id="nav-teacher-quizzes" onclick="App.switchTeacherTab('teacher-quizzes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Quiz Builder</span>
+      </button>
+      <button class="nav-item" id="nav-teacher-interventions" onclick="App.switchTeacherTab('teacher-interventions')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Outcomes</span>
+      </button>
+    </nav>
+
+    <!-- REUSABLE MODALS -->
+    
+    <!-- 1. Evidence Modal (Explainable Support Signals) -->
+    <div class="modal-overlay" id="evidence-modal" onclick="if(event.target===this) App.closeModal('evidence-modal')">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Explainable Signal Evidence</span>
+          <button class="modal-close-btn" onclick="App.closeModal('evidence-modal')">&times;</button>
+        </div>
+        <div id="evidence-modal-content" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 2. Intervention Creator Modal -->
+    <div class="modal-overlay" id="intervention-create-modal" onclick="if(event.target===this) App.closeModal('intervention-create-modal')">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Academic Intervention</span>
+          <button class="modal-close-btn" onclick="App.closeModal('intervention-create-modal')">&times;</button>
+        </div>
+        <div id="intervention-create-content" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 3. Follow-up Assessment Check Modal (Student) -->
+    <div class="modal-overlay" id="intervention-check-modal" onclick="if(event.target===this) App.closeModal('intervention-check-modal')">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Targeted Concept Assessment</span>
+          <button class="modal-close-btn" onclick="App.closeModal('intervention-check-modal')">&times;</button>
+        </div>
+        <div id="intervention-check-content" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 4. Admin Management Action Modal (Add Student / Add Teacher / Safe Deletion) -->
+    <div class="modal-overlay" id="admin-action-modal" onclick="if(event.target===this) App.closeModal('admin-action-modal')">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Admin Action</span>
+          <button class="modal-close-btn" onclick="App.closeModal('admin-action-modal')">&times;</button>
+        </div>
+        <div id="admin-action-content" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/student.js"></script>
+  <script src="/js/teacher.js"></script>
+  <script src="/js/admin.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

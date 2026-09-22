@@ -1,0 +1,52 @@
+:root {
+  /* Color Palette - Professional Modern Education + AI */
+  --primary: #1E3A8A;           /* Deep Blue */
+  --primary-light: #3B82F6;     /* Royal Blue */
+  --primary-dark: #172554;      /* Navy */
+  --accent: #4F46E5;            /* Indigo */
+  --accent-light: #EEF2FF;      /* Soft Indigo Background */
+  
+  --bg-app: #F1F5F9;            /* Slate-100 Outside frame */
+  --bg-surface: #FFFFFF;        /* Crisp White Surface */
+  --bg-subtle: #F8FAFC;         /* Slate-50 Card Background */
+  --bg-hover: #F1F5F9;          /* Slate-100 Hover */
+  
+  --text-main: #0F172A;         /* Slate-900 Primary Text */
+  --text-muted: #64748B;        /* Slate-500 Muted Text */
+  --text-light: #94A3B8;        /* Slate-400 Light Text */
+  --text-on-primary: #FFFFFF;
+  
+  --border-color: #E2E8F0;      /* Slate-200 Border */
+  --border-focus: #3B82F6;      /* Active Border */
+  
+  /* Status Colors */
+  --status-review-bg: #FEF3C7;  /* Amber-100 */
+  --status-review-text: #B45309;/* Amber-700 */
+  --status-review-border: #FCD34D;
+  
+  --status-success-bg: #DCFCE7; /* Emerald-100 */
+  --status-success-text: #15803D;/* Emerald-700 */
+  --status-success-border: #86EFAC;
+  
+  --status-info-bg: #E0F2FE;    /* Sky-100 */
+  --status-info-text: #0369A1;  /* Sky-700 */
+  
+  --status-danger-bg: #FEE2E2;  /* Red-100 */
+  --status-danger-text: #B91C1C; /* Red-700 */
+
+  /* Typography & Layout Tokens */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --phone-width: 412px;
+  --phone-height: 860px;
+}

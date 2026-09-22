@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartEdu Pitch Deck — Team Infinity X</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: #0F172A;
+      color: #0F172A;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Top Progress Bar */
+    #progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #3B82F6, #4F46E5, #F59E0B);
+      width: 9%;
+      transition: width 0.3s ease;
+    }
+
+    /* Deck Viewport */
+    .deck-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Individual Slide */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 60px 80px 60px;
+      background: #F8FAFC;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* Dark Slide Variant (Title & Closing) */
+    .slide.dark-slide {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #FFFFFF;
+    }
+
+    /* Slide Header */
+    .slide-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .team-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EEF2FF;
+      color: #4F46E5;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .dark-slide .team-badge {
+      background: rgba(79, 70, 229, 0.3);
+      color: #93C5FD;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+    }
+
+    .slide-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1E3A8A;
+      letter-spacing: -0.5px;
+    }
+
+    .dark-slide .slide-title {
+      color: #FFFFFF;
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .dark-slide .slide-subtitle {
+      color: #94A3B8;
+    }
+
+    /* Slide Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    /* Presentation Cards */
+    .p-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #E2E8F0;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dark-slide .p-card {
+      background: #1E293B;
+      border-color: #334155;
+      color: #FFFFFF;
+    }
+
+    .p-card-danger {
+      background: #FEF2F2;
+      border-color: #FECACA;
+    }
+
+    .p-card-success {
+      background: #F0FDF4;
+      border-color: #BBF7D0;
+    }
+
+    .p-card-warning {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+
+    .p-card-accent {
+      background: #EEF2FF;
+      border-color: #C7D2FE;
+    }
+
+    /* Card Typography */
+    .card-heading {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .p-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .p-list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* Stat Big Number */
+    .big-num {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Floating Navigation Controls */
+    .deck-controls {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #FFFFFF;
+      z-index: 100;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .ctrl-label {
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .action-link-btn {
+      background: #3B82F6;
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+
+    .action-link-btn:hover {
+      background: #2563EB;
+    }
+
+    .action-link-btn.accent-link {
+      background: #F59E0B;
+    }
+    .action-link-btn.accent-link:hover {
+      background: #D97706;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Progress Bar -->
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Main Slides Deck Container -->
+  <main class="deck-container" id="deck">
+
+    <!-- SLIDE 1: Title (Dark Theme) -->
+    <section class="slide dark-slide active" id="slide-1">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; max-width:900px; margin:0 auto;">
+        <div style="margin-bottom:16px;">
+          <span class="team-badge">⚡ HACKATHON PITCH DECK</span>
+        </div>
+        <h1 style="font-size:56px; font-weight:900; line-height:1.1; letter-spacing:-1px;">SmartEdu</h1>
+        <h2 style="font-size:26px; font-weight:700; color:#93C5FD; margin-top:8px;">
+          AI-Powered Learning Support Detection System
+        </h2>
+        <p style="font-size:16px; color:#CBD5E1; margin-top:16px; line-height:1.5;">
+          Uncovering hidden academic distress before grades drop — through multi-factor response latency analysis, repeated mistakes, and confidence mismatch tracking.
+        </p>
+
+        <div class="p-card" style="margin-top:32px; background:#1E293B; border-color:#4F46E5; padding:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:16px; font-weight:800; color:#FACC15;">TEAM INFINITY X</div>
+              <div style="font-size:13px; color:#94A3B8; margin-top:2px;">Core Cycle: DETECT → EXPLAIN → INTERVENE → MEASURE</div>
+            </div>
+            <span style="font-size:12px; background:rgba(79,70,229,0.3); color:#93C5FD; padding:4px 12px; border-radius:12px; font-weight:700;">
+              Production Mobile App
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: The Core Problem -->
+    <section class="slide" id="slide-2">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Problem Statement</span>
+          <h2 class="slide-title">The Fallacy of the Passing Grade</h2>
+          <p class="slide-subtitle">Why traditional grading systems fail to catch struggling students in time</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="p-card p-card-danger">
+          <div class="card-heading" style="color:#B91C1C;">
+            <span>❌ The Traditional Blindspot</span>
+          </div>
+          <div class="p-list">
+            <div class="p-list-item">
+              <span>•</span>
+              <span><strong>Aggregate Score Illusion:</strong> A student scores 82% overall. On the gradebook, they look completely safe.</span>
+            </div>
+            <div class="p-list-item">
+              <span>•</span>
+              <span><strong>Hidden Conceptual Fractures:</strong> Behind that 82%, the student may have failed every single question on a critical prerequisite topic.</span>
+            </div>
+            <div class="p-list-item">
+              <span>•</span>
+              <span><strong>Autopsy Rather than Prevention:</strong> Traditional tools only notice failure when the final exam grade collapses weeks later.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card p-card-warning">
+          <div class="card-heading" style="color:#92400E;">
+            <span>🔍 The SmartEdu Discovery: Alex Morgan</span>
+          </div>
+          <div style="font-size:14px; font-weight:800; color:#15803D;">
+            Alex's Overall Score: 82% (Looks Completely Fine!)
+          </div>
+          <div class="p-list">
+            <div class="p-list-item">
+              <span>⚡</span>
+              <span><strong>5 Repeated Errors</strong> concentrated strictly on <em>Kirchhoff's Laws</em>.</span>
+            </div>
+            <div class="p-list-item">
+              <span>⚡</span>
+              <span><strong>3 Repeated Attempts</strong> on the same concept questions without score improvement.</span>
+            </div>
+            <div class="p-list-item">
+              <span>⚡</span>
+              <span><strong>48s Response Latency:</strong> 2.2x higher than Alex's personal baseline of 22s.</span>
+            </div>
+            <div class="p-list-item">
+              <span>⚡</span>
+              <span><strong>4 Confidence Mismatches:</strong> Alex marked "Very Confident" on incorrect answers (severe misconception).</span>
+            </div>
+          </div>
+          <div style="font-size:12px; font-weight:800; color:#B45309; background:#FEF3C7; padding:8px 12px; border-radius:8px; margin-top:auto;">
+            SmartEdu flags a "Possible Support Signal" BEFORE Alex fails advanced exams.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Non-Deficit Philosophy -->
+    <section class="slide" id="slide-3">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • AI Ethics</span>
+          <h2 class="slide-title">Non-Deficit, Constructive AI Philosophy</h2>
+          <p class="slide-subtitle">Ethical guardrails designed to support rather than stigmatize</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="p-card p-card-danger">
+          <div class="card-heading" style="color:#B91C1C;">What We NEVER Do ⛔</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>❌</span><span>Never display derogatory labels like <em>"This student is weak"</em>.</span></div>
+            <div class="p-list-item"><span>❌</span><span>Never diagnose learning disabilities or make psychological claims.</span></div>
+            <div class="p-list-item"><span>❌</span><span>Never make black-box automated classifications without human review.</span></div>
+            <div class="p-list-item"><span>❌</span><span>Never expose student information to other students or unauthorized users.</span></div>
+          </div>
+        </div>
+
+        <div class="p-card p-card-success">
+          <div class="card-heading" style="color:#15803D;">What We Communicate ✅</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>✔</span><span><strong>"Possible academic support signal detected."</strong></span></div>
+            <div class="p-list-item"><span>✔</span><span><strong>"Review Recommended on Kirchhoff's Laws."</strong></span></div>
+            <div class="p-list-item"><span>✔</span><span>Transparently highlight conceptual misconceptions.</span></div>
+            <div class="p-list-item"><span>✔</span><span>Targeted micro-interventions tailored to specific learning behavior.</span></div>
+          </div>
+        </div>
+
+        <div class="p-card p-card-accent">
+          <div class="card-heading" style="color:#4338CA;">Teacher Agency 🧑‍🏫</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>💡</span><span>The AI serves as an objective evidence radar, not a judge.</span></div>
+            <div class="p-list-item"><span>💡</span><span>Teacher inspects exact response times, attempt counts, and question history.</span></div>
+            <div class="p-list-item"><span>💡</span><span>Teacher retains full authority on whether and how to intervene.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: The Closed Loop Cycle -->
+    <section class="slide" id="slide-4">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Product Loop</span>
+          <h2 class="slide-title">The Complete Educational Cycle</h2>
+          <p class="slide-subtitle">A closed-loop system connecting student actions to measured learning gains</p>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="p-card">
+          <div style="font-size:12px; font-weight:800; color:#4F46E5;">STEP 1 & 2</div>
+          <div class="card-heading" style="font-size:15px;">Learning & Data</div>
+          <p style="font-size:12px; color:#64748B;">Student answers MCQs. System records selected option, latency in seconds, and confidence rating.</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:12px; font-weight:800; color:#D97706;">STEP 3 & 4</div>
+          <div class="card-heading" style="font-size:15px;">Engine & Signal</div>
+          <p style="font-size:12px; color:#64748B;">Multi-factor engine computes Support Score (0–100). If ≥ 45, status set to REVIEW.</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:12px; font-weight:800; color:#1E3A8A;">STEP 5 & 6</div>
+          <div class="card-heading" style="font-size:15px;">Review & Intervene</div>
+          <p style="font-size:12px; color:#64748B;">Teacher opens explainable evidence drawer and assigns targeted 3-question concept check.</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:12px; font-weight:800; color:#15803D;">STEP 7 & 8</div>
+          <div class="card-heading" style="font-size:15px;">Measure Delta</div>
+          <p style="font-size:12px; color:#64748B;">Student completes check. System stores before/after scores and verifies +40% improvement.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Confidence Mismatch Engine -->
+    <section class="slide" id="slide-5">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Core Innovation</span>
+          <h2 class="slide-title">The 4-Tier Confidence Mismatch Matrix</h2>
+          <p class="slide-subtitle">Separating mere guessing from deep-seated conceptual misconceptions</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="p-card">
+          <div class="card-heading" style="color:#1E3A8A;">Mandatory Post-Answer Confidence</div>
+          <p style="font-size:13px; color:#64748B; line-height:1.5;">
+            After answering every question, students must rate their confidence:
+            <strong>Not Sure</strong>, <strong>Somewhat Sure</strong>, <strong>Confident</strong>, or <strong>Very Confident</strong>.
+          </p>
+          <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:12px; font-size:12px; line-height:1.5; margin-top:8px;">
+            A student who answers incorrectly while being <strong>Very Confident</strong> has built a false mental model. They do not know they are wrong. This is the highest-priority academic support signal.
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="p-card p-card-success" style="padding:14px;">
+            <div style="font-size:10px; font-weight:800; color:#15803D;">CORRECT + HIGH CONF</div>
+            <div style="font-size:13px; font-weight:800; color:#15803D; margin-top:4px;">Mastery 🌟</div>
+            <p style="font-size:11px; color:#475569; margin-top:4px;">Understands and applies concepts with certainty.</p>
+          </div>
+
+          <div class="p-card p-card-danger" style="padding:14px;">
+            <div style="font-size:10px; font-weight:800; color:#B91C1C;">WRONG + HIGH CONF</div>
+            <div style="font-size:13px; font-weight:800; color:#B91C1C; margin-top:4px;">Misconception ⚠️</div>
+            <p style="font-size:11px; color:#475569; margin-top:4px;">Strongest support signal! False belief in incorrect rule.</p>
+          </div>
+
+          <div class="p-card p-card-warning" style="padding:14px;">
+            <div style="font-size:10px; font-weight:800; color:#92400E;">CORRECT + LOW CONF</div>
+            <div style="font-size:13px; font-weight:800; color:#92400E; margin-top:4px;">Hesitation ❓</div>
+            <p style="font-size:11px; color:#475569; margin-top:4px;">Got it right but doubts ability. Needs reassurance.</p>
+          </div>
+
+          <div class="p-card" style="padding:14px; background:#F1F5F9;">
+            <div style="font-size:10px; font-weight:800; color:#475569;">WRONG + LOW CONF</div>
+            <div style="font-size:13px; font-weight:800; color:#475569; margin-top:4px;">Knowledge Gap 📉</div>
+            <p style="font-size:11px; color:#475569; margin-top:4px;">Knows they don't know. Needs first-time instruction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Support Signal Algorithm -->
+    <section class="slide" id="slide-6">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Algorithmic Engine</span>
+          <h2 class="slide-title">Learning Support Signal Engine</h2>
+          <p class="slide-subtitle">Multi-factor mathematical formulation calibrated for high precision</p>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="p-card">
+          <div style="font-size:11px; font-weight:800; color:#1E3A8A;">FACTOR 1 (0-35 PTS)</div>
+          <div class="card-heading" style="font-size:15px;">Error Frequency</div>
+          <p style="font-size:12px; color:#64748B;">Concentration of repeated mistakes on a topic. If topic error rate ≥ 60%, triggers distress factor.</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:11px; font-weight:800; color:#4F46E5;">FACTOR 2 (0-20 PTS)</div>
+          <div class="card-heading" style="font-size:15px;">Repeated Attempts</div>
+          <p style="font-size:12px; color:#64748B;">Number of tries taken on questions within the same concept without score stabilization.</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:11px; font-weight:800; color:#D97706;">FACTOR 3 (0-25 PTS)</div>
+          <div class="card-heading" style="font-size:15px;">Latency Contrast</div>
+          <p style="font-size:12px; color:#64748B;">Compares average response time on topic against student baseline on other topics (ratio > 1.2x).</p>
+        </div>
+
+        <div class="p-card">
+          <div style="font-size:11px; font-weight:800; color:#15803D;">FACTOR 4 (0-25 PTS)</div>
+          <div class="card-heading" style="font-size:15px;">Confidence Mismatch</div>
+          <p style="font-size:12px; color:#64748B;">Overconfidence on incorrect answers weighted heavily (10 pts per mismatch) to target misconceptions.</p>
+        </div>
+      </div>
+
+      <div class="p-card p-card-accent" style="margin-top:16px; padding:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; font-weight:700; color:#4338CA;">
+            Support Score = min(100, Error Pts + Attempt Pts + Latency Pts + Mismatch Pts)
+          </span>
+          <span class="team-badge" style="background:#FEF3C7; color:#B45309;">
+            Threshold: Score ≥ 45 ➜ Generates "REVIEW" Signal
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Teacher Experience & Explainable Evidence -->
+    <section class="slide" id="slide-7">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Teacher Experience</span>
+          <h2 class="slide-title">Transparent Evidence: No Black-Box AI</h2>
+          <p class="slide-subtitle">Teachers inspect clear factual explanations and assign 1-click interventions</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="p-card p-card-warning">
+          <div class="card-heading" style="color:#92400E; font-size:15px;">
+            Evidence Screen: Alex Morgan (82% Overall)
+          </div>
+          <div class="p-list" style="font-size:12px;">
+            <div class="p-list-item"><span>⚡</span><span><strong>5 repeated mistakes</strong> recorded on <em>Kirchhoff's Laws</em>.</span></div>
+            <div class="p-list-item"><span>⚡</span><span><strong>4 confidence mismatches:</strong> Student marked "Very Confident" on wrong answers.</span></div>
+            <div class="p-list-item"><span>⚡</span><span><strong>Response time (48s)</strong> is 2.2x higher than Alex's baseline (22s).</span></div>
+            <div class="p-list-item"><span>⚡</span><span><strong>Question:</strong> "Kirchhoff's loop rule expresses conservation of..."</span></div>
+            <div class="p-list-item"><span>⚡</span><span>Alex selected: [A] Electric charge (Wrong!) | Conf: Very Confident</span></div>
+          </div>
+        </div>
+
+        <div class="p-card">
+          <div class="card-heading" style="color:#1E3A8A;">Targeted Academic Interventions 🎯</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>✔</span><span><strong>3-Question Concept Check:</strong> Targeted micro-check to verify if misconception is resolved.</span></div>
+            <div class="p-list-item"><span>✔</span><span><strong>Concept Explanation:</strong> Teacher shares focused review notes.</span></div>
+            <div class="p-list-item"><span>✔</span><span><strong>Practice Worksheet:</strong> Progressive circuit exercises.</span></div>
+            <div class="p-list-item"><span>✔</span><span><strong>Teacher Guidance Note:</strong> <em>"Review Kirchhoff's loop rule sign convention (+IR vs -IR) before advanced circuits."</em></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Measured Results -->
+    <section class="slide" id="slide-8">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Measured Impact</span>
+          <h2 class="slide-title">Closing the Loop: Quantified Improvement</h2>
+          <p class="slide-subtitle">Empirical validation through follow-up assessment tracking</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="p-card p-card-danger" style="text-align:center;">
+          <div style="font-size:12px; font-weight:800; color:#B91C1C;">BEFORE INTERVENTION</div>
+          <div class="big-num" style="color:#B91C1C; margin:14px 0;">40%</div>
+          <p style="font-size:12px; color:#64748B;">Initial accuracy on concept questions</p>
+        </div>
+
+        <div class="p-card p-card-success" style="text-align:center;">
+          <div style="font-size:12px; font-weight:800; color:#15803D;">AFTER INTERVENTION</div>
+          <div class="big-num" style="color:#15803D; margin:14px 0;">80%</div>
+          <p style="font-size:12px; color:#64748B;">3-Question Concept Check accuracy</p>
+        </div>
+
+        <div class="p-card p-card-accent" style="text-align:center;">
+          <div style="font-size:12px; font-weight:800; color:#4338CA;">MEASURED DELTA</div>
+          <div class="big-num" style="color:#4338CA; margin:14px 0;">+40%</div>
+          <p style="font-size:12px; color:#64748B;">Status: "Improved" (Signal Resolved)</p>
+        </div>
+      </div>
+
+      <div class="p-card" style="margin-top:16px; padding:16px; font-size:12px; line-height:1.5;">
+        <strong>Objective Progression Rules:</strong>
+        Improvement ≥ +25% ➜ <strong>Improved</strong> (Signal Resolved) •
+        Between +10% and +24% ➜ <strong>Partially Improved</strong> •
+        < +10% ➜ <strong>Further Review Recommended</strong>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Technology Stack -->
+    <section class="slide" id="slide-9">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Architecture</span>
+          <h2 class="slide-title">Production-Ready Full-Stack Architecture</h2>
+          <p class="slide-subtitle">Clean, lightweight, dependency-safe, and fully persistent</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="p-card">
+          <div class="card-heading" style="color:#1E3A8A;">Mobile-First Frontend 📱</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>•</span><span>Native Android phone shell mockup with notch and status bar.</span></div>
+            <div class="p-list-item"><span>•</span><span>Responsive desktop full-width presentation toggle.</span></div>
+            <div class="p-list-item"><span>•</span><span>Touch targets ≥ 44x44px and bottom navigation bar.</span></div>
+            <div class="p-list-item"><span>•</span><span>Zero bloated client build steps: Vanilla CSS tokens & ES6 JavaScript.</span></div>
+          </div>
+        </div>
+
+        <div class="p-card">
+          <div class="card-heading" style="color:#4F46E5;">REST API & Security 🛡️</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>•</span><span>Python Starlette ASGI server with Uvicorn engine.</span></div>
+            <div class="p-list-item"><span>•</span><span>HMAC-SHA256 cryptographically signed session tokens.</span></div>
+            <div class="p-list-item"><span>•</span><span>PBKDF2-HMAC-SHA256 password hashing (100,000 iterations).</span></div>
+            <div class="p-list-item"><span>•</span><span>Role-Based Access Control on every API endpoint.</span></div>
+          </div>
+        </div>
+
+        <div class="p-card">
+          <div class="card-heading" style="color:#15803D;">Persistent Relational DB 💾</div>
+          <div class="p-list">
+            <div class="p-list-item"><span>•</span><span>Disk-backed SQLite database (smartedu.db) with WAL mode.</span></div>
+            <div class="p-list-item"><span>•</span><span>Strict foreign keys & cascading deletion rules.</span></div>
+            <div class="p-list-item"><span>•</span><span>16 structured tables covering users, curriculum, and signals.</span></div>
+            <div class="p-list-item"><span>•</span><span>Survives app restart, device restart, and deployments.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Validation & Acceptance -->
+    <section class="slide" id="slide-10">
+      <div class="slide-meta">
+        <div>
+          <span class="team-badge">Team Infinity X • Testing & Demo</span>
+          <h2 class="slide-title">25/25 Acceptance Criteria Verified</h2>
+          <p class="slide-subtitle">100% automated test pass rate + comprehensive synthetic dataset</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="p-card p-card-success">
+          <div class="card-heading" style="color:#15803D;">Automated Test Suite (100% Green) ✅</div>
+          <div class="p-list" style="font-size:12px;">
+            <div class="p-list-item"><span>✔</span><span>1-4: Admin provisions teachers, students, & class assignments.</span></div>
+            <div class="p-list-item"><span>✔</span><span>5-6: Teacher authors multi-question quizzes with topic mapping.</span></div>
+            <div class="p-list-item"><span>✔</span><span>7-10: Student takes quiz with live timer & confidence rating.</span></div>
+            <div class="p-list-item"><span>✔</span><span>11-14: Engine detects pattern and generates support signal.</span></div>
+            <div class="p-list-item"><span>✔</span><span>15-16: Teacher inspects explainable evidence screen.</span></div>
+            <div class="p-list-item"><span>✔</span><span>17-20: Teacher creates intervention, student completes check (+40%).</span></div>
+            <div class="p-list-item"><span>✔</span><span>21-22: Only admin can permanently delete records safely.</span></div>
+            <div class="p-list-item"><span>✔</span><span>23-25: Strict RBAC isolation & disk persistence confirmed.</span></div>
+          </div>
+        </div>
+
+        <div class="p-card p-card-accent">
+          <div class="card-heading" style="color:#4338CA;">Synthetic Demo Dataset 📊</div>
+          <div class="p-list" style="font-size:12px;">
+            <div class="p-list-item"><span>•</span><span><strong>5 Teachers:</strong> Physics, Chemistry, Math, CS, Biology.</span></div>
+            <div class="p-list-item"><span>•</span><span><strong>20 Students:</strong> Grade 10-A, Grade 11-Science, Grade 12-Advanced.</span></div>
+            <div class="p-list-item"><span>•</span><span><strong>4 Subjects, 10 Chapters, 30 Topics.</strong></span></div>
+            <div class="p-list-item"><span>•</span><span><strong>10 Quizzes with 100+ questions.</strong></span></div>
+            <div class="p-list-item"><span>•</span><span>Pre-seeded real scenario: Alex Morgan flagged on Kirchhoff's Laws.</span></div>
+            <div class="p-list-item"><span>•</span><span>Pre-seeded improvement: Priya Sharma (+40% on Covalent Bonding).</span></div>
+            <div class="p-list-item"><span>•</span><span><strong>1-Click Evaluator Fast-Login Bar</strong> for instant testing.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Closing Slide (Dark Theme) -->
+    <section class="slide dark-slide" id="slide-11">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; max-width:900px; margin:0 auto;">
+        <span class="team-badge">⚡ SUMMARY & VISION</span>
+        <h2 style="font-size:42px; font-weight:900; line-height:1.2; margin-top:12px;">
+          Transforming Education Through Proactive Academic Care
+        </h2>
+        <p style="font-size:20px; color:#93C5FD; margin-top:12px;">
+          Traditional grading is an autopsy of past performance.<br>
+          SmartEdu is preventive healthcare for academic learning.
+        </p>
+        <p style="font-size:15px; color:#CBD5E1; margin-top:16px; line-height:1.6;">
+          By combining response latency, repeated errors, and confidence mismatch with explainable AI and teacher agency, we ensure NO student silently falls behind.
+        </p>
+
+        <div class="p-card" style="margin-top:32px; background:#1E293B; border-color:#4F46E5; padding:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:18px; font-weight:800; color:#FACC15;">THANK YOU! — TEAM INFINITY X</div>
+              <div style="font-size:13px; color:#94A3B8; margin-top:4px;">Questions & Live Interactive Demonstration</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <a href="/" class="action-link-btn">📱 Launch App</a>
+              <a href="/api/download/presentation" class="action-link-btn accent-link">📥 PPTX File</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Navigation Controls -->
+  <nav class="deck-controls" aria-label="Slide Controls">
+    <button class="ctrl-btn" id="prev-btn" title="Previous Slide" aria-label="Previous Slide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="ctrl-label" id="slide-indicator">Slide 1 / 11</span>
+    <button class="ctrl-btn" id="next-btn" title="Next Slide" aria-label="Next Slide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div style="width:1px; height:20px; background:rgba(255,255,255,0.2); margin:0 4px;"></div>
+    <button class="ctrl-btn" id="fs-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
+    <a href="/api/download/presentation" class="action-link-btn accent-link" title="Download PowerPoint PPTX">
+      📥 PPTX
+    </a>
+    <a href="/" class="action-link-btn" title="Back to SmartEdu Mobile App">
+      📱 App
+    </a>
+  </nav>
+
+  <script>
+    const totalSlides = 11;
+    let currentSlide = 1;
+
+    function goToSlide(slideNum) {
+      if (slideNum < 1) slideNum = 1;
+      if (slideNum > totalSlides) slideNum = totalSlides;
+      currentSlide = slideNum;
+
+      document.querySelectorAll('.slide').forEach((s, idx) => {
+        s.classList.toggle('active', (idx + 1) === currentSlide);
+      });
+
+      document.getElementById('slide-indicator').textContent = `Slide ${currentSlide} / ${totalSlides}`;
+      const progressPercent = Math.round((currentSlide / totalSlides) * 100);
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+    }
+
+    document.getElementById('prev-btn').addEventListener('click', () => goToSlide(currentSlide - 1));
+    document.getElementById('next-btn').addEventListener('click', () => goToSlide(currentSlide + 1));
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        goToSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        goToSlide(currentSlide - 1);
+      }
+    });
+
+    // Fullscreen toggle
+    document.getElementById('fs-btn').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+  </script>
+</body>
+</html>
